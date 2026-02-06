@@ -97,7 +97,14 @@ cd worker && npm run dev
 1. Connect your GitHub repo to Cloudflare Pages
 2. Set build command: `npm run build`
 3. Set build directory: `client/dist`
-4. Add environment variables in Cloudflare Pages dashboard
+4. Add environment variables in Cloudflare Pages dashboard:
+   ```
+   VITE_SUPABASE_URL = https://mivtfrprigvznzdtjiqz.supabase.co
+   VITE_SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1pdnRmcnByaWd2em56ZHRqaXF6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMTQ2MTcsImV4cCI6MjA4NTg5MDYxN30.jnzjHqcg5hS_Vzlntgpu3BWZJXULbZaz1CmgbFwTphI
+   ```
+5. The project includes configuration files:
+   - `pages-config.json` - Build configuration
+   - `_routes.json` - Routing configuration
 
 #### Backend (Cloudflare Workers)
 ```bash
