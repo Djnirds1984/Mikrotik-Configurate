@@ -1,0 +1,17 @@
+{
+  "cloudflare": {
+    "account_id": "your_cloudflare_account_id",
+    "workers_dev": true,
+    "route": "",
+    "zone_id": ""
+  },
+  "build": {
+    "command": "npm run build"
+  },
+  "env": {
+    "production": {
+      "SUPABASE_URL": "your_production_supabase_url",
+      "SUPABASE_SERVICE_KEY": "your_production_supabase_service_key"
+    }
+  }
+}

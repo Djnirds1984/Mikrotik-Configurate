@@ -1,0 +1,7 @@
+name = "mikrotik-manager-worker"
+main = "src/index.js"
+compatibility_date = "2023-12-01"
+
+[vars]
+SUPABASE_URL = "YOUR_SUPABASE_URL"
+SUPABASE_SERVICE_KEY = "YOUR_SUPABASE_SERVICE_KEY"
