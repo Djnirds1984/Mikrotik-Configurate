@@ -18,6 +18,7 @@ create table if not exists public.users (
   tenant_id uuid references public.tenants(id) on delete cascade,
   email text not null,
   role text not null default 'user',
+  is_superadmin boolean default false,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
@@ -74,53 +75,59 @@ alter table public.vouchers enable row level security;
 alter table public.router_configs enable row level security;
 
 -- RLS Policies for Tenants
-create policy "Tenants are viewable by admins"
+create policy "Tenants are viewable by admins or superadmins"
   on public.tenants for select
   using ( 
     exists (
       select 1 from public.users 
       where users.id = auth.uid() 
-      and users.role = 'admin'
+      and (users.role = 'admin' OR users.is_superadmin = true)
     )
   );
 
-create policy "Tenants are insertable by admins"
+create policy "Tenants are insertable by admins or superadmins"
   on public.tenants for insert
   with check (
     exists (
       select 1 from public.users 
       where users.id = auth.uid() 
-      and users.role = 'admin'
+      and (users.role = 'admin' OR users.is_superadmin = true)
     )
   );
 
-create policy "Tenants are updatable by admins"
+create policy "Tenants are updatable by admins or superadmins"
   on public.tenants for update
   using (
     exists (
       select 1 from public.users 
       where users.id = auth.uid() 
-      and users.role = 'admin'
+      and (users.role = 'admin' OR users.is_superadmin = true)
     )
   );
 
 -- RLS Policies for Users
-create policy "Users can view their own tenant users"
+create policy "Users can view their own tenant users or superadmins can view all"
   on public.users for select
   using (
     tenant_id = (
       select tenant_id from public.users 
       where id = auth.uid()
-    )
+    ) OR (
+      select is_superadmin from public.users 
+      where id = auth.uid()
+    ) = true
   );
 
-create policy "Users can insert users in their tenant"
+create policy "Users can insert users in their tenant or superadmins anywhere"
   on public.users for insert
   with check (
     tenant_id = (
       select tenant_id from public.users 
       where id = auth.uid()
-    )
+    ) OR (
+      select is_superadmin from public.users 
+      where id = auth.uid()
+    ) = true
   );
 
 -- RLS Policies for Routers

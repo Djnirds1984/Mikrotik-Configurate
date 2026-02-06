@@ -30,9 +30,22 @@ A cloud-based management platform for MikroTik routers with multi-tenant support
 
 ### 1. Supabase Setup
 
-1. Create a new Supabase project
+1. Your Supabase project is already configured at: https://mivtfrprigvznzdtjiqz.supabase.co
 2. Run the schema from `supabase/schema.sql` in your Supabase SQL editor
-3. Note your Supabase URL and anon key
+3. Run the superadmin setup script from `supabase/superadmin-setup.sql` to create the admin account
+4. Your credentials are already configured in the project
+
+### 2. Superadmin Account
+
+The superadmin account has been pre-configured with:
+- **Email**: aldrincabanez9@gmail.com
+- **Password**: Akoangnagwagi84%
+
+This account has special privileges:
+- Access to all tenants
+- Ability to create/delete tenants
+- System-wide administrative access
+- Special "Super Admin" badge in the UI
 
 ### 2. Frontend Setup
 

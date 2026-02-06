@@ -1,14 +1,30 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'YOUR_SUPABASE_URL';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'YOUR_SUPABASE_ANON_KEY';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://mivtfrprigvznzdtjiqz.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1pdnRmcnByaWd2em56ZHRqaXF6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMTQ2MTcsImV4cCI6MjA4NTg5MDYxN30.jnzjHqcg5hS_Vzlntgpu3BWZJXULbZaz1CmgbFwTphI';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Helper functions for common operations
 export const authService = {
   signIn: async (email, password) => {
-    return await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    
+    if (!error && data.user) {
+      // Check if user is superadmin
+      const { data: userData } = await supabase
+        .from('users')
+        .select('is_superadmin, role')
+        .eq('id', data.user.id)
+        .single();
+      
+      if (userData?.is_superadmin) {
+        // Superadmin gets special treatment
+        console.log('Superadmin logged in');
+      }
+    }
+    
+    return { data, error };
   },
   
   signUp: async (email, password, tenantData) => {
@@ -24,6 +40,9 @@ export const authService = {
     });
     
     if (!error && data.user) {
+      // Check if this is the superadmin account
+      const isSuperAdmin = email === 'aldrincabanez9@gmail.com';
+      
       // Create tenant record
       await supabase.from('tenants').insert({
         id: data.user.id,
@@ -36,7 +55,8 @@ export const authService = {
         id: data.user.id,
         email: email,
         tenant_id: data.user.id,
-        role: 'admin'
+        role: 'admin',
+        is_superadmin: isSuperAdmin
       });
     }
     
@@ -45,6 +65,19 @@ export const authService = {
   
   signOut: async () => {
     return await supabase.auth.signOut();
+  },
+  
+  getCurrentUser: async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { data: userData } = await supabase
+        .from('users')
+        .select('*, tenants(*)')
+        .eq('id', user.id)
+        .single();
+      return { user, userData };
+    }
+    return { user: null, userData: null };
   }
 };
 

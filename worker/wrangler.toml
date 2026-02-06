@@ -3,5 +3,5 @@ main = "src/index.js"
 compatibility_date = "2023-12-01"
 
 [vars]
-SUPABASE_URL = "YOUR_SUPABASE_URL"
-SUPABASE_SERVICE_KEY = "YOUR_SUPABASE_SERVICE_KEY"
+SUPABASE_URL = "https://mivtfrprigvznzdtjiqz.supabase.co"
+SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1pdnRmcnByaWd2em56ZHRqaXF6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMTQ2MTcsImV4cCI6MjA4NTg5MDYxN30.jnzjHqcg5hS_Vzlntgpu3BWZJXULbZaz1CmgbFwTphI"
